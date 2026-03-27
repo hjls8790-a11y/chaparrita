@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Mundo de Gissel 💜</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            background-color: #f3e5f5; /* Fondo morado muy claro */
+            color: #4a148c; /* Texto morado oscuro */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #9c27b0;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 { border-bottom: 2px dashed #ce93d8; padding-bottom: 10px; }
+        .galeria {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .galeria-placeholder {
+            width: 100%;
+            padding: 20px;
+            background-color: #e1bee7;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+        .juego-area { margin-top: 20px; }
+        canvas {
+            border: 3px solid #ba68c8;
+            border-radius: 10px;
+            cursor: crosshair;
+            background-color: #fafafa;
+        }
+        button {
+            background-color: #ab47bc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #8e24aa; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌟 El Mundo de mi Chaparrita Hermosa 🌟</h1>
+        <p>¡Bienvenida a tus vacaciones, Gissel!</p>
+    </header>
+
+    <div class="container">
+        <h2>📷 Galería y Recuerdos</h2>
+        <div class="galeria">
+            <div class="galeria-placeholder">
+                <p>Espacio reservado para las fotos y links de Gissel.</p>
+                <p><i>Nota de desarrollo: Aquí puedes integrar Firebase para gestionar la base de datos, subir archivos de imagen y renderizarlos dinámicamente con JavaScript.</i></p>
+            </div>
+        </div>
+
+        <h2>🎨 Juego: ¡A pintar de Morado!</h2>
+        <p>Usa tu dedo o el mouse para dibujar en el lienzo.</p>
+        <div class="juego-area">
+            <canvas id="pizarra" width="300" height="300"></canvas>
+            <br>
+            <button onclick="limpiarPizarra()">Borrar y empezar de nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        // Lógica sencilla para el juego de pintar
+        const canvas = document.getElementById('pizarra');
+        const ctx = canvas.getContext('2d');
+        let pintando = false;
+
+        // Soporte para mouse
+        canvas.addEventListener('mousedown', iniciarPosicion);
+        canvas.addEventListener('mouseup', finalizarPosicion);
+        canvas.addEventListener('mousemove', dibujar);
+
+        // Soporte para pantallas táctiles (móviles)
+        canvas.addEventListener('touchstart', iniciarPosicion);
+        canvas.addEventListener('touchend', finalizarPosicion);
+        canvas.addEventListener('touchmove', dibujarTouch);
+
+        function iniciarPosicion(e) { pintando = true; dibujar(e); }
+        function finalizarPosicion() { pintando = false; ctx.beginPath(); }
+        
+        function dibujar(e) {
+            if (!pintando) return;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#9c27b0'; // Color morado
+            ctx.lineTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+        }
+
+        function dibujarTouch(e) {
+            if (!pintando) return;
+            e.preventDefault();
+            let touch = e.touches;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#9c27b0';
+            ctx.lineTo(touch.clientX - canvas.getBoundingClientRect().left, touch.clientY - canvas.getBoundingClientRect().top);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(touch.clientX - canvas.getBoundingClientRect().left, touch.clientY - canvas.getBoundingClientRect().top);
+        }
+
+        function limpiarPizarra() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
