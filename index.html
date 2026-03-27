@@ -61,6 +61,34 @@
             transition: 0.3s;
         }
         button:hover { background-color: #8e24aa; }
+
+        /* Estilos adicionales para los nuevos botones especiales */
+        .mensajes-area {
+            background-color: #f1e4f4; /* Un tono ligeramente diferente para separar */
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap; /* para móviles */
+        }
+        .btn-especial {
+            background-color: #ba68c8; /* Un morado un poco diferente */
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 17px;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-especial:hover {
+            background-color: #ab47bc;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body>
@@ -79,6 +107,12 @@
             </div>
         </div>
 
+        <h2>💌 Mensajes Especiales</h2>
+        <div class="mensajes-area">
+            <button class="btn-especial" id="btnVoz">¡Escucha un mensaje! 💜</button>
+            <button class="btn-especial" onclick="window.open('https://g.co/gemini/share/0e1a96b36d89', '_blank')">Ver nuestra charla 🤖</button>
+        </div>
+
         <h2>🎨 Juego: ¡A pintar de Morado!</h2>
         <p>Usa tu dedo o el mouse para dibujar en el lienzo.</p>
         <div class="juego-area">
@@ -89,7 +123,7 @@
     </div>
 
     <script>
-        // Lógica sencilla para el juego de pintar
+        // --- FUNCIONES ORIGINALES DEL JUEGO (NO ALTERADAS) ---
         const canvas = document.getElementById('pizarra');
         const ctx = canvas.getContext('2d');
         let pintando = false;
@@ -134,6 +168,28 @@
         function limpiarPizarra() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+        // --- FIN DE FUNCIONES ORIGINALES ---
+
+        // --- NUEVAS FUNCIONES PARA LOS BOTONES ESPECIALES ---
+        const btnVoz = document.getElementById('btnVoz');
+        const mensajeAmo = "te amo chaparrita hermosa";
+
+        btnVoz.addEventListener('click', () => {
+            // Verifica si el navegador soporta síntesis de voz
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(mensajeAmo);
+                utterance.lang = 'es-MX'; // Ajusta a una voz en español de México (o tu variante local preferida)
+                
+                // Ajustes opcionales para una voz más cálida
+                utterance.pitch = 1.1; // Un tono ligeramente más agudo
+                utterance.rate = 0.9;  // Un poco más lento para que se entienda mejor
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Tu navegador no soporta esta función, pero ¡igual te amo chaparrita hermosa!");
+            }
+        });
+        // --- FIN DE NUEVAS FUNCIONES ---
     </script>
 </body>
 </html>
