@@ -62,9 +62,9 @@
         }
         button:hover { background-color: #8e24aa; }
 
-        /* Estilos adicionales para los nuevos botones especiales */
+        /* Estilos para los mensajes especiales */
         .mensajes-area {
-            background-color: #f1e4f4; /* Un tono ligeramente diferente para separar */
+            background-color: #f1e4f4;
             padding: 20px;
             border-radius: 12px;
             margin-top: 15px;
@@ -72,10 +72,10 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            flex-wrap: wrap; /* para móviles */
+            flex-wrap: wrap; 
         }
         .btn-especial {
-            background-color: #ba68c8; /* Un morado un poco diferente */
+            background-color: #ba68c8; 
             color: white;
             border: none;
             padding: 12px 24px;
@@ -88,6 +88,48 @@
         .btn-especial:hover {
             background-color: #ab47bc;
             box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        /* NUEVOS ESTILOS: Juego de Preguntas */
+        .trivia-area {
+            background-color: #e1bee7;
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #ce93d8;
+            margin-top: 30px;
+        }
+        #pregunta-texto {
+            font-size: 1.4em;
+            color: #4a148c;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .opciones-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn-opcion {
+            background-color: #f3e5f5;
+            color: #6a1b9a;
+            border: 2px solid #ab47bc;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            min-width: 120px;
+        }
+        .btn-opcion:hover {
+            background-color: #ce93d8;
+            color: white;
+        }
+        #feedback-icono {
+            font-size: 4em;
+            margin-top: 15px;
+            min-height: 70px; /* Para que no salte la pantalla al aparecer */
         }
     </style>
 </head>
@@ -120,20 +162,25 @@
             <br>
             <button onclick="limpiarPizarra()">Borrar y empezar de nuevo</button>
         </div>
+
+        <h2>🧠 ¡Aprende Jugando, Gissel!</h2>
+        <div class="trivia-area">
+            <p id="pregunta-texto">Cargando pregunta...</p>
+            <div id="opciones-container" class="opciones-grid">
+                </div>
+            <div id="feedback-icono"></div>
+        </div>
     </div>
 
     <script>
-        // --- FUNCIONES ORIGINALES DEL JUEGO (NO ALTERADAS) ---
+        // --- FUNCIONES ORIGINALES DEL JUEGO DE PINTAR ---
         const canvas = document.getElementById('pizarra');
         const ctx = canvas.getContext('2d');
         let pintando = false;
 
-        // Soporte para mouse
         canvas.addEventListener('mousedown', iniciarPosicion);
         canvas.addEventListener('mouseup', finalizarPosicion);
         canvas.addEventListener('mousemove', dibujar);
-
-        // Soporte para pantallas táctiles (móviles)
         canvas.addEventListener('touchstart', iniciarPosicion);
         canvas.addEventListener('touchend', finalizarPosicion);
         canvas.addEventListener('touchmove', dibujarTouch);
@@ -145,7 +192,7 @@
             if (!pintando) return;
             ctx.lineWidth = 5;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = '#9c27b0'; // Color morado
+            ctx.strokeStyle = '#9c27b0';
             ctx.lineTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
             ctx.stroke();
             ctx.beginPath();
@@ -168,28 +215,112 @@
         function limpiarPizarra() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
-        // --- FIN DE FUNCIONES ORIGINALES ---
 
-        // --- NUEVAS FUNCIONES PARA LOS BOTONES ESPECIALES ---
+        // --- FUNCIONES ORIGINALES DE LOS BOTONES ESPECIALES ---
         const btnVoz = document.getElementById('btnVoz');
         const mensajeAmo = "te amo chaparrita hermosa";
 
         btnVoz.addEventListener('click', () => {
-            // Verifica si el navegador soporta síntesis de voz
             if ('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(mensajeAmo);
-                utterance.lang = 'es-MX'; // Ajusta a una voz en español de México (o tu variante local preferida)
-                
-                // Ajustes opcionales para una voz más cálida
-                utterance.pitch = 1.1; // Un tono ligeramente más agudo
-                utterance.rate = 0.9;  // Un poco más lento para que se entienda mejor
-
+                utterance.lang = 'es-MX';
+                utterance.pitch = 1.1;
+                utterance.rate = 0.9;
                 window.speechSynthesis.speak(utterance);
             } else {
                 alert("Tu navegador no soporta esta función, pero ¡igual te amo chaparrita hermosa!");
             }
         });
+
+        // --- NUEVAS FUNCIONES: JUEGO DE PREGUNTAS ---
+        const preguntas = [
+            {
+                pregunta: "Matemáticas: Si tienes 3 manzanas y te comes 1, ¿cuántas te quedan?",
+                opciones: ["1", "2", "4"],
+                respuestaCorrecta: "2"
+            },
+            {
+                pregunta: "Inglés: ¿Cómo se dice tu color favorito (Morado) en inglés?",
+                opciones: ["Pink", "Blue", "Purple"],
+                respuestaCorrecta: "Purple"
+            },
+            {
+                pregunta: "Conocimiento del Medio: ¿Qué necesitan las plantitas para crecer fuertes?",
+                opciones: ["Agua y Sol", "Refresco", "Dulces"],
+                respuestaCorrecta: "Agua y Sol"
+            },
+            {
+                pregunta: "Español: ¿Con qué letra empieza la palabra 'Mamá'?",
+                opciones: ["P", "M", "S"],
+                respuestaCorrecta: "M"
+            },
+            {
+                pregunta: "Matemáticas: ¿Cuánto es 5 + 2?",
+                opciones: ["6", "7", "8"],
+                respuestaCorrecta: "7"
+            }
+        ];
+
+        let indicePreguntaActual = 0;
+        const preguntaTexto = document.getElementById('pregunta-texto');
+        const opcionesContainer = document.getElementById('opciones-container');
+        const feedbackIcono = document.getElementById('feedback-icono');
+
+        // Función para reproducir voz en el juego
+        function hablarJuego(texto) {
+            if ('speechSynthesis' in window) {
+                // Cancelar cualquier audio anterior para que no se encimen
+                window.speechSynthesis.cancel(); 
+                const utterance = new SpeechSynthesisUtterance(texto);
+                utterance.lang = 'es-MX';
+                utterance.pitch = 1.2; // Tono un poco más agudo y alegre
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function cargarPregunta() {
+            const preguntaActual = preguntas[indicePreguntaActual];
+            preguntaTexto.textContent = preguntaActual.pregunta;
+            opcionesContainer.innerHTML = ''; // Limpiar opciones anteriores
+            feedbackIcono.textContent = '';   // Limpiar carita
+
+            preguntaActual.opciones.forEach(opcion => {
+                const boton = document.createElement('button');
+                boton.className = 'btn-opcion';
+                boton.textContent = opcion;
+                boton.onclick = () => verificarRespuesta(opcion, preguntaActual.respuestaCorrecta);
+                opcionesContainer.appendChild(boton);
+            });
+        }
+
+        function verificarRespuesta(seleccion, correcta) {
+            if (seleccion === correcta) {
+                feedbackIcono.textContent = "😊✨";
+                hablarJuego("Correcto Gissel");
+                
+                // Deshabilitar botones para no hacer doble clic
+                const botones = opcionesContainer.querySelectorAll('.btn-opcion');
+                botones.forEach(b => b.disabled = true);
+
+                // Pasar a la siguiente pregunta después de 2.5 segundos
+                setTimeout(() => {
+                    indicePreguntaActual++;
+                    if (indicePreguntaActual >= preguntas.length) {
+                        indicePreguntaActual = 0; // Volver a empezar si se acaban
+                    }
+                    cargarPregunta();
+                }, 2500);
+            } else {
+                feedbackIcono.textContent = "🤔";
+                hablarJuego("Sigue intentando Gissel");
+            }
+        }
+
+        // Iniciar el juego de preguntas al cargar la página
+        cargarPregunta();
         // --- FIN DE NUEVAS FUNCIONES ---
+
     </script>
 </body>
 </html>
