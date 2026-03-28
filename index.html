@@ -132,7 +132,7 @@
             min-height: 70px; 
         }
 
-        /* === NUEVOS ESTILOS === */
+        /* === ESTILOS SECCIONES ADICIONALES (INALTERADAS) === */
 
         /* ESTILOS: Buzón Mágico */
         .buzon-area {
@@ -166,11 +166,11 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            max-width: 300px; /* Tamaño apto para 6 años */
+            max-width: 300px; 
             margin: 20px auto;
         }
         .carta-memo {
-            background-color: #9c27b0; /* Dorso morado */
+            background-color: #9c27b0; 
             color: transparent;
             font-size: 2.5em;
             width: 60px;
@@ -193,7 +193,7 @@
             background-color: #f3e5f5;
             color: #6a1b9a;
             cursor: default;
-            visibility: visible; /* Mantenerlas visibles */
+            visibility: visible; 
         }
 
         /* ESTILOS: Sorpresa del Día */
@@ -339,7 +339,7 @@
             }
         });
 
-        // --- FUNCIONES: JUEGO DE PREGUNTAS (TRIVIA) (Lógica e integración de Confeti INALTERADAS) ---
+        // --- FUNCIONES: JUEGO DE PREGUNTAS (TRIVIA) (INALTERADA) ---
         const preguntas = [
             {
                 pregunta: "Matemáticas: Si tienes 3 manzanas y te comes 1, ¿cuántas te quedan?",
@@ -454,7 +454,6 @@
                 feedbackIcono.textContent = "😊✨";
                 hablarJuego("Correcto Gissel");
 
-                // --- INTEGRACIÓN DE CONFETI EN TRIVIA (INALTERADA) ---
                 if (window.confetti) {
                     confetti({
                         particleCount: 80,
@@ -489,9 +488,9 @@
         // Iniciar el juego de Trivia
         cargarPregunta();
 
-        // === NUEVAS FUNCIONES AÑADIDAS AL FINAL ===
+        // === FUNCIONES ADICIONALES (INALTERADAS EXCEPTO LA CORRECCIÓN DEL MEMORAMA) ===
 
-        // FUNCIONES: Buzón Mágico
+        // FUNCIONES: Buzón Mágico (INALTERADA)
         const mensajesHadas = [
             "¡Hoy brillas más que una estrella, Gissel!",
             "¡Vimos tu dibujo de la pizarra, está hermoso! ✨",
@@ -509,27 +508,25 @@
             const cartaContenedor = document.getElementById('cartaContenedor');
             const mensajeAleatorio = mensajesHadas[Math.floor(Math.random() * mensajesHadas.length)];
             
-            // Creamos la carta con estilo
             cartaContenedor.innerHTML = `<div class="carta">${mensajeAleatorio}</div>`;
-            hablarJuego(mensajeAleatorio); // Hadas hablan alegremente
+            hablarJuego(mensajeAleatorio); 
         }
 
-        // FUNCIONES: Memorama
+        // FUNCIONES: Memorama (¡LÓGICA CORREGIDA AQUÍ!)
         const iconosMemo = ["🦄", "🦋", "🎨", "🌟", "🍭", "💜", "👑", "🧸"];
-        const tarjetas = [...iconosMemo, ...iconosMemo]; // Duplicar para crear pares
+        const tarjetas = [...iconosMemo, ...iconosMemo]; 
         let tarjetasBarajadas = [];
         let tarjetasVolteadas = [];
         let parejasEncontradas = 0;
         const memoGrid = document.getElementById('memoGrid');
         const memoFeedback = document.getElementById('memoFeedback');
 
-        // Barajar tarjetas
         function shuffle(array) {
             return array.sort(() => 0.5 - Math.random());
         }
 
         function crearTableroMemorama() {
-            memoGrid.innerHTML = ''; // Limpiar grid anterior
+            memoGrid.innerHTML = ''; 
             tarjetasVolteadas = [];
             parejasEncontradas = 0;
             memoFeedback.textContent = '';
@@ -538,14 +535,15 @@
             tarjetasBarajadas.forEach((icon, index) => {
                 const card = document.createElement('div');
                 card.classList.add('carta-memo');
-                card.dataset.pareja = icon; // Identificador del par
-                card.textContent = icon; // El ícono está dentro pero oculto
+                card.dataset.pareja = icon; 
+                card.textContent = icon; 
                 card.onclick = () => voltearTarjeta(card);
                 memoGrid.appendChild(card);
             });
         }
 
         function voltearTarjeta(card) {
+            // Evitar voltear más de 2 tarjetas a la vez o voltear la misma tarjeta dos veces o voltear tarjetas ya emparejadas
             if (tarjetasVolteadas.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
                 card.classList.add('flipped');
                 tarjetasVolteadas.push(card);
@@ -571,12 +569,14 @@
                             }
                         }
                     } else {
-                        // No es un par, voltear de vuelta después de un segundo
+                        // --- CORRECCIÓN AQUÍ ---
+                        // No es un par, esperamos 2 segundos (2000ms) para que Gissel recuerde las cartas
                         setTimeout(() => {
                             card1.classList.remove('flipped');
                             card2.classList.remove('flipped');
                             tarjetasVolteadas = [];
-                        }, 1000);
+                        }, 2000); // 2000 milisegundos = 2 segundos completos
+                        // --- FIN CORRECCIÓN ---
                     }
                 }
             }
@@ -587,10 +587,9 @@
             crearTableroMemorama();
         }
 
-        // Iniciar el tablero al cargar
         crearTableroMemorama();
 
-        // FUNCIONES: Sorpresa del Día
+        // FUNCIONES: Sorpresa del Día (INALTERADA)
         const btnSorpresa = document.getElementById('btnSorpresa');
         const textoSorpresa = document.getElementById('textoSorpresa');
         const mensajesSorpresa = [
@@ -606,11 +605,8 @@
                 window.speechSynthesis.cancel();
                 const mensajeSorpresaAleatorio = mensajesSorpresa[Math.floor(Math.random() * mensajesSorpresa.length)];
                 
-                // Mostrar texto
                 textoSorpresa.textContent = mensajeSorpresaAleatorio;
-
-                // Voz con el mensaje exacto
-                hablarJuego(mensajeSorpresaAleatorio); // Usamos la voz del juego que es clara y alegre
+                hablarJuego(mensajeSorpresaAleatorio); 
             } else {
                 textoSorpresa.textContent = "Tu navegador no soporta voz, ¡pero igual te amo campeona!";
             }
