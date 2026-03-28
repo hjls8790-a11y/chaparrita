@@ -90,7 +90,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.15);
         }
 
-        /* ESTILOS: Juego de Preguntas */
+        /* ESTILOS: Juego de Preguntas (Trivia) */
         .trivia-area {
             background-color: #e1bee7;
             padding: 25px;
@@ -131,6 +131,87 @@
             margin-top: 15px;
             min-height: 70px; 
         }
+
+        /* === NUEVOS ESTILOS === */
+
+        /* ESTILOS: Buzón Mágico */
+        .buzon-area {
+            background-color: #f1e4f4;
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px dashed #ce93d8;
+            margin-top: 30px;
+            position: relative;
+        }
+        #cartaContenedor {
+            margin: 20px auto;
+            max-width: 90%;
+            min-height: 60px;
+        }
+        .carta {
+            background-color: #ffffff;
+            border: 3px solid #9c27b0;
+            border-radius: 15px;
+            padding: 15px;
+            color: #4a148c;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 5px 10px rgba(156, 39, 176, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .carta:hover { transform: scale(1.02); }
+
+        /* ESTILOS: Memorama */
+        .memo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px; /* Tamaño apto para 6 años */
+            margin: 20px auto;
+        }
+        .carta-memo {
+            background-color: #9c27b0; /* Dorso morado */
+            color: transparent;
+            font-size: 2.5em;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+            transition: background-color 0.3s, color 0.1s;
+        }
+        .carta-memo.flipped {
+            background-color: #ffffff;
+            color: #4a148c;
+            border: 2px solid #ce93d8;
+            cursor: default;
+        }
+        .carta-memo.matched {
+            background-color: #f3e5f5;
+            color: #6a1b9a;
+            cursor: default;
+            visibility: visible; /* Mantenerlas visibles */
+        }
+
+        /* ESTILOS: Sorpresa del Día */
+        .sorpresa-area {
+            background-color: #f3e5f5; 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 2px dashed #ab47bc;
+            margin-top: 30px;
+        }
+        #textoSorpresa {
+            font-size: 1.8em; 
+            color: #6a1b9a; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            min-height: 40px; 
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
@@ -171,6 +252,30 @@
                 </div>
             <div id="feedback-icono"></div>
         </div>
+
+        <h2>✨ El Buzón Mágico de las Hadas ✨</h2>
+        <div class="buzon-area">
+            <p>A veces, las hadas dejan mensajes brillantes aquí...</p>
+            <div id="cartaContenedor">
+                <p><i>Buzón vacío por ahora... ¡Toca el botón!</i></p>
+            </div>
+            <button class="btn-especial" onclick="revisarBuzon()">Revisar el Buzón Mágico 🧚‍♀️</button>
+        </div>
+
+        <h2>🧠 Juego de Memoria: ¡Encuentra los Pares! 🧠</h2>
+        <div class="memorama-area">
+            <div id="memoGrid" class="memo-grid">
+                </div>
+            <p id="memoFeedback" style="font-weight: bold;"></p>
+            <button class="btn-especial" onclick="reiniciarMemorama()" style="margin-top: 10px;">Jugar de nuevo</button>
+        </div>
+
+        <h2>🎁 ¡Sorpresa Especial de Papá para Gissel! 🎁</h2>
+        <div class="sorpresa-area">
+            <button class="btn-especial" id="btnSorpresa" style="font-size: 1.2em; padding: 15px 30px;">🎁 Toca aquí para ver tu Sorpresa 🎁</button>
+            <div id="textoSorpresa"></div>
+        </div>
+
     </div>
 
     <script>
@@ -234,7 +339,7 @@
             }
         });
 
-        // --- FUNCIONES: JUEGO DE PREGUNTAS (Lógica y preguntas inalteradas) ---
+        // --- FUNCIONES: JUEGO DE PREGUNTAS (TRIVIA) (Lógica e integración de Confeti INALTERADAS) ---
         const preguntas = [
             {
                 pregunta: "Matemáticas: Si tienes 3 manzanas y te comes 1, ¿cuántas te quedan?",
@@ -349,25 +454,21 @@
                 feedbackIcono.textContent = "😊✨";
                 hablarJuego("Correcto Gissel");
 
-                // --- INTEGRACIÓN DE CONFETI (Nueva función inyectada aquí) ---
-                // Lanzar confeti morado y blanco
+                // --- INTEGRACIÓN DE CONFETI EN TRIVIA (INALTERADA) ---
                 if (window.confetti) {
-                    // Ráfaga desde la izquierda
                     confetti({
                         particleCount: 80,
                         spread: 70,
                         origin: { x: 0.1, y: 0.7 },
-                        colors: ['#9c27b0', '#ba68c8', '#ffffff'] // Tonos morados y blanco
+                        colors: ['#9c27b0', '#ba68c8', '#ffffff']
                     });
-                    // Ráfaga desde la derecha
                     confetti({
                         particleCount: 80,
                         spread: 70,
                         origin: { x: 0.9, y: 0.7 },
-                        colors: ['#9c27b0', '#ba68c8', '#ffffff'] // Tonos morados y blanco
+                        colors: ['#9c27b0', '#ba68c8', '#ffffff']
                     });
                 }
-                // --- FIN DE INTEGRACIÓN DE CONFETI ---
                 
                 const botones = opcionesContainer.querySelectorAll('.btn-opcion');
                 botones.forEach(b => b.disabled = true);
@@ -385,9 +486,135 @@
             }
         }
 
-        // Iniciar el juego
+        // Iniciar el juego de Trivia
         cargarPregunta();
-        // --- FIN DE FUNCIONES (INALTERADAS EXCEPTO LA INYECCIÓN DE CONFETI) ---
+
+        // === NUEVAS FUNCIONES AÑADIDAS AL FINAL ===
+
+        // FUNCIONES: Buzón Mágico
+        const mensajesHadas = [
+            "¡Hoy brillas más que una estrella, Gissel!",
+            "¡Vimos tu dibujo de la pizarra, está hermoso! ✨",
+            "Te dejamos un abrazo de hada invisible. 🤗",
+            "¡Eres la niña más valiente que conocemos!",
+            "¡Tus sonrisas llenan el mundo de alegría! 😊",
+            "Disfruta mucho de tus vacaciones de morado.",
+            "¡Hoy es un día perfecto para sonreír, Gissel!",
+            "¡Qué bien contestaste las preguntas de Trivia!",
+            "Te enviamos polvitos mágicos de felicidad. ✨💜"
+        ];
+
+        function revisarBuzon() {
+            window.speechSynthesis.cancel();
+            const cartaContenedor = document.getElementById('cartaContenedor');
+            const mensajeAleatorio = mensajesHadas[Math.floor(Math.random() * mensajesHadas.length)];
+            
+            // Creamos la carta con estilo
+            cartaContenedor.innerHTML = `<div class="carta">${mensajeAleatorio}</div>`;
+            hablarJuego(mensajeAleatorio); // Hadas hablan alegremente
+        }
+
+        // FUNCIONES: Memorama
+        const iconosMemo = ["🦄", "🦋", "🎨", "🌟", "🍭", "💜", "👑", "🧸"];
+        const tarjetas = [...iconosMemo, ...iconosMemo]; // Duplicar para crear pares
+        let tarjetasBarajadas = [];
+        let tarjetasVolteadas = [];
+        let parejasEncontradas = 0;
+        const memoGrid = document.getElementById('memoGrid');
+        const memoFeedback = document.getElementById('memoFeedback');
+
+        // Barajar tarjetas
+        function shuffle(array) {
+            return array.sort(() => 0.5 - Math.random());
+        }
+
+        function crearTableroMemorama() {
+            memoGrid.innerHTML = ''; // Limpiar grid anterior
+            tarjetasVolteadas = [];
+            parejasEncontradas = 0;
+            memoFeedback.textContent = '';
+            tarjetasBarajadas = shuffle(tarjetas);
+
+            tarjetasBarajadas.forEach((icon, index) => {
+                const card = document.createElement('div');
+                card.classList.add('carta-memo');
+                card.dataset.pareja = icon; // Identificador del par
+                card.textContent = icon; // El ícono está dentro pero oculto
+                card.onclick = () => voltearTarjeta(card);
+                memoGrid.appendChild(card);
+            });
+        }
+
+        function voltearTarjeta(card) {
+            if (tarjetasVolteadas.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
+                card.classList.add('flipped');
+                tarjetasVolteadas.push(card);
+
+                if (tarjetasVolteadas.length === 2) {
+                    const card1 = tarjetasVolteadas;
+                    const card2 = tarjetasVolteadas;
+
+                    if (card1.dataset.pareja === card2.dataset.pareja) {
+                        // ¡Encontró un par!
+                        card1.classList.add('matched');
+                        card2.classList.add('matched');
+                        tarjetasVolteadas = [];
+                        parejasEncontradas++;
+
+                        hablarJuego("¡Un par, muy bien!");
+
+                        if (parejasEncontradas === iconosMemo.length) {
+                            hablarJuego("¡Ganaste Gissel, eres genial!");
+                            memoFeedback.textContent = "¡Ganaste! ✨😊";
+                            if (window.confetti) {
+                                confetti({ particleCount: 150, spread: 180 });
+                            }
+                        }
+                    } else {
+                        // No es un par, voltear de vuelta después de un segundo
+                        setTimeout(() => {
+                            card1.classList.remove('flipped');
+                            card2.classList.remove('flipped');
+                            tarjetasVolteadas = [];
+                        }, 1000);
+                    }
+                }
+            }
+        }
+
+        function reiniciarMemorama() {
+            window.speechSynthesis.cancel();
+            crearTableroMemorama();
+        }
+
+        // Iniciar el tablero al cargar
+        crearTableroMemorama();
+
+        // FUNCIONES: Sorpresa del Día
+        const btnSorpresa = document.getElementById('btnSorpresa');
+        const textoSorpresa = document.getElementById('textoSorpresa');
+        const mensajesSorpresa = [
+            "la palabra hace valer al hombre",
+            "eres mi campeona",
+            "te amo con todo mi corazon",
+            "eres lo maximo",
+            "Papa te ama"
+        ];
+
+        btnSorpresa.addEventListener('click', () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const mensajeSorpresaAleatorio = mensajesSorpresa[Math.floor(Math.random() * mensajesSorpresa.length)];
+                
+                // Mostrar texto
+                textoSorpresa.textContent = mensajeSorpresaAleatorio;
+
+                // Voz con el mensaje exacto
+                hablarJuego(mensajeSorpresaAleatorio); // Usamos la voz del juego que es clara y alegre
+            } else {
+                textoSorpresa.textContent = "Tu navegador no soporta voz, ¡pero igual te amo campeona!";
+            }
+        });
 
     </script>
 </body>
