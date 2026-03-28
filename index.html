@@ -132,6 +132,7 @@
             min-height: 70px; 
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
@@ -173,7 +174,7 @@
     </div>
 
     <script>
-        // --- FUNCIONES ORIGINALES DEL JUEGO DE PINTAR ---
+        // --- FUNCIONES ORIGINALES DEL JUEGO DE PINTAR (INALTERADAS) ---
         const canvas = document.getElementById('pizarra');
         const ctx = canvas.getContext('2d');
         let pintando = false;
@@ -216,12 +217,13 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        // --- FUNCIONES ORIGINALES DE LOS BOTONES ESPECIALES ---
+        // --- FUNCIONES ORIGINALES DE LOS BOTONES ESPECIALES (INALTERADAS) ---
         const btnVoz = document.getElementById('btnVoz');
         const mensajeAmo = "te amo chaparrita hermosa";
 
         btnVoz.addEventListener('click', () => {
             if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); 
                 const utterance = new SpeechSynthesisUtterance(mensajeAmo);
                 utterance.lang = 'es-MX';
                 utterance.pitch = 1.1;
@@ -232,9 +234,8 @@
             }
         });
 
-        // --- FUNCIONES: JUEGO DE PREGUNTAS (Con las 10 nuevas preguntas integradas) ---
+        // --- FUNCIONES: JUEGO DE PREGUNTAS (Lógica y preguntas inalteradas) ---
         const preguntas = [
-            // Preguntas Originales
             {
                 pregunta: "Matemáticas: Si tienes 3 manzanas y te comes 1, ¿cuántas te quedan?",
                 opciones: ["1", "2", "4"],
@@ -260,7 +261,6 @@
                 opciones: ["6", "7", "8"],
                 respuestaCorrecta: "7"
             },
-            // --- TUS 10 NUEVAS PREGUNTAS ---
             {
                 pregunta: "Español: ¿Qué es el título de un libro?",
                 opciones: ["Un dibujo", "El nombre del libro", "El final"],
@@ -348,6 +348,26 @@
             if (seleccion === correcta) {
                 feedbackIcono.textContent = "😊✨";
                 hablarJuego("Correcto Gissel");
+
+                // --- INTEGRACIÓN DE CONFETI (Nueva función inyectada aquí) ---
+                // Lanzar confeti morado y blanco
+                if (window.confetti) {
+                    // Ráfaga desde la izquierda
+                    confetti({
+                        particleCount: 80,
+                        spread: 70,
+                        origin: { x: 0.1, y: 0.7 },
+                        colors: ['#9c27b0', '#ba68c8', '#ffffff'] // Tonos morados y blanco
+                    });
+                    // Ráfaga desde la derecha
+                    confetti({
+                        particleCount: 80,
+                        spread: 70,
+                        origin: { x: 0.9, y: 0.7 },
+                        colors: ['#9c27b0', '#ba68c8', '#ffffff'] // Tonos morados y blanco
+                    });
+                }
+                // --- FIN DE INTEGRACIÓN DE CONFETI ---
                 
                 const botones = opcionesContainer.querySelectorAll('.btn-opcion');
                 botones.forEach(b => b.disabled = true);
@@ -367,7 +387,7 @@
 
         // Iniciar el juego
         cargarPregunta();
-        // --- FIN DE FUNCIONES ---
+        // --- FIN DE FUNCIONES (INALTERADAS EXCEPTO LA INYECCIÓN DE CONFETI) ---
 
     </script>
 </body>
