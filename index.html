@@ -90,7 +90,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.15);
         }
 
-        /* NUEVOS ESTILOS: Juego de Preguntas */
+        /* ESTILOS: Juego de Preguntas */
         .trivia-area {
             background-color: #e1bee7;
             padding: 25px;
@@ -129,7 +129,7 @@
         #feedback-icono {
             font-size: 4em;
             margin-top: 15px;
-            min-height: 70px; /* Para que no salte la pantalla al aparecer */
+            min-height: 70px; 
         }
     </style>
 </head>
@@ -232,8 +232,9 @@
             }
         });
 
-        // --- NUEVAS FUNCIONES: JUEGO DE PREGUNTAS ---
+        // --- FUNCIONES: JUEGO DE PREGUNTAS (Con las 10 nuevas preguntas integradas) ---
         const preguntas = [
+            // Preguntas Originales
             {
                 pregunta: "Matemáticas: Si tienes 3 manzanas y te comes 1, ¿cuántas te quedan?",
                 opciones: ["1", "2", "4"],
@@ -258,6 +259,57 @@
                 pregunta: "Matemáticas: ¿Cuánto es 5 + 2?",
                 opciones: ["6", "7", "8"],
                 respuestaCorrecta: "7"
+            },
+            // --- TUS 10 NUEVAS PREGUNTAS ---
+            {
+                pregunta: "Español: ¿Qué es el título de un libro?",
+                opciones: ["Un dibujo", "El nombre del libro", "El final"],
+                respuestaCorrecta: "El nombre del libro"
+            },
+            {
+                pregunta: "Español: ¿Qué letra es la primera del alfabeto?",
+                opciones: ["La letra E", "La letra B", "La letra A"],
+                respuestaCorrecta: "La letra A"
+            },
+            {
+                pregunta: "Español: ¿Qué es un cuento?",
+                opciones: ["Una comida", "Una historia imaginaria", "Un animal"],
+                respuestaCorrecta: "Una historia imaginaria"
+            },
+            {
+                pregunta: "Conocimiento del Medio: ¿Qué es el sol?",
+                opciones: ["Una luna de queso", "Una estrella que nos da luz y calor", "Un planeta de agua"],
+                respuestaCorrecta: "Una estrella que nos da luz y calor"
+            },
+            {
+                pregunta: "Conocimiento del Medio: ¿Qué animal vive en el agua?",
+                opciones: ["Un perro", "Un pez", "Un gato"],
+                respuestaCorrecta: "Un pez"
+            },
+            {
+                pregunta: "Conocimiento del Medio: ¿Qué es un árbol?",
+                opciones: ["Una planta grande con tronco, ramas y hojas", "Un carro muy rápido", "Una casita de madera"],
+                respuestaCorrecta: "Una planta grande con tronco, ramas y hojas"
+            },
+            {
+                pregunta: "Matemáticas: ¿Cuántos dedos tienes en una mano?",
+                opciones: ["3 dedos", "10 dedos", "5 dedos"],
+                respuestaCorrecta: "5 dedos"
+            },
+            {
+                pregunta: "Matemáticas: ¿Cuánto es 2 + 2?",
+                opciones: ["4", "3", "5"],
+                respuestaCorrecta: "4"
+            },
+            {
+                pregunta: "Matemáticas: ¿Qué forma tiene 4 lados iguales?",
+                opciones: ["Un círculo", "Un cuadrado", "Un triángulo"],
+                respuestaCorrecta: "Un cuadrado"
+            },
+            {
+                pregunta: "Matemáticas: ¿Cuántos días hay en una semana?",
+                opciones: ["5 días", "7 días", "10 días"],
+                respuestaCorrecta: "7 días"
             }
         ];
 
@@ -266,14 +318,12 @@
         const opcionesContainer = document.getElementById('opciones-container');
         const feedbackIcono = document.getElementById('feedback-icono');
 
-        // Función para reproducir voz en el juego
         function hablarJuego(texto) {
             if ('speechSynthesis' in window) {
-                // Cancelar cualquier audio anterior para que no se encimen
                 window.speechSynthesis.cancel(); 
                 const utterance = new SpeechSynthesisUtterance(texto);
                 utterance.lang = 'es-MX';
-                utterance.pitch = 1.2; // Tono un poco más agudo y alegre
+                utterance.pitch = 1.2; 
                 utterance.rate = 0.95;
                 window.speechSynthesis.speak(utterance);
             }
@@ -282,8 +332,8 @@
         function cargarPregunta() {
             const preguntaActual = preguntas[indicePreguntaActual];
             preguntaTexto.textContent = preguntaActual.pregunta;
-            opcionesContainer.innerHTML = ''; // Limpiar opciones anteriores
-            feedbackIcono.textContent = '';   // Limpiar carita
+            opcionesContainer.innerHTML = ''; 
+            feedbackIcono.textContent = '';   
 
             preguntaActual.opciones.forEach(opcion => {
                 const boton = document.createElement('button');
@@ -299,15 +349,13 @@
                 feedbackIcono.textContent = "😊✨";
                 hablarJuego("Correcto Gissel");
                 
-                // Deshabilitar botones para no hacer doble clic
                 const botones = opcionesContainer.querySelectorAll('.btn-opcion');
                 botones.forEach(b => b.disabled = true);
 
-                // Pasar a la siguiente pregunta después de 2.5 segundos
                 setTimeout(() => {
                     indicePreguntaActual++;
                     if (indicePreguntaActual >= preguntas.length) {
-                        indicePreguntaActual = 0; // Volver a empezar si se acaban
+                        indicePreguntaActual = 0; 
                     }
                     cargarPregunta();
                 }, 2500);
@@ -317,9 +365,9 @@
             }
         }
 
-        // Iniciar el juego de preguntas al cargar la página
+        // Iniciar el juego
         cargarPregunta();
-        // --- FIN DE NUEVAS FUNCIONES ---
+        // --- FIN DE FUNCIONES ---
 
     </script>
 </body>
